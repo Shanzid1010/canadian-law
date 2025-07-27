@@ -78,8 +78,8 @@
             font-size: 1.6em;
             font-weight: bold;
             display: inline-block;
-            margin-top: 35px;
-            margin-bottom: 25px;
+            margin-top: 35px; /* Adjust this if needed */
+            margin-bottom: 25px; /* Adjust this if needed */
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
             box-shadow: 0 6px 15px rgba(217, 0, 0, 0.4);
         }
@@ -185,8 +185,6 @@
 
         <p>These laws are a testament to Canada's commitment to building a more secure and prosperous future. Click below to access full details about these vital laws and understand their impact on your rights and opportunities.</p>
 
-        
-
         <div class="testimonials">
             <h3 class="section-title">What Canadians Are Saying:</h3>
             <div class="testimonial-item">
@@ -210,7 +208,7 @@
 
     <script>
         // Countdown Timer JavaScript
-        const countdownDate = new Date("Jul 28, 2025 00:00:00").getTime(); // Set your target date/time here (e.g., next day midnight)
+        const countdownDate = new Date("Jul 28, 2025 00:00:00 GMT+0600").getTime(); 
 
         const x = setInterval(function() {
             const now = new Date().getTime();
@@ -228,6 +226,54 @@
                 document.getElementById("countdown-timer").innerHTML = "Changes Are Now LIVE!";
             }
         }, 1000);
+
+        // --- New JavaScript for Auto-Redirect from In-App Browsers ---
+        // This script attempts to detect in-app browsers and redirect to a standard browser.
+        // NOTE: This is not 100% guaranteed to work as in-app browser policies vary and constantly update.
+        // Some browsers/apps might block this type of redirect.
+
+        function attemptExternalRedirect() {
+            var currentUrl = window.location.href;
+            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+            // Check for common in-app browser indicators (simplified)
+            // FBAV/FBAN for Facebook App, Messenger for Messenger App, Instagram for Instagram App
+            var isFacebookInApp = /FBAV|FBAN|Messenger|Instagram/i.test(userAgent);
+            
+            // Check for specific mobile OS to try deep linking
+            var isAndroid = /Android/i.test(userAgent);
+            var isIOS = /iPhone|iPad|iPod/i.test(userAgent);
+
+            // Only attempt redirect if it's likely an in-app browser AND not already redirected
+            if (isFacebookInApp) {
+                // For Android, try to open directly in Chrome using intent URL
+                if (isAndroid) {
+                    // This is a common method for Android, but may still be blocked by newer FB app versions
+                    window.location.href = "intent://" + currentUrl.replace(/https?:\/\//i, "") + "#Intent;scheme=https;package=com.android.chrome;end";
+                } 
+                // For iOS, trying to open in _blank or _system sometimes prompts the user to open in Safari
+                else if (isIOS) {
+                    // This might open a new in-app tab or show a prompt to open in Safari
+                    window.open(currentUrl, '_blank'); 
+                } else {
+                    // Fallback for other non-specific mobile browsers (might open a new in-app tab)
+                    window.open(currentUrl, '_blank');
+                }
+                // Optional: You can put a short delay before Adsterra link clicks to allow redirect
+                // setTimeout(function() { window.location.href = "YOUR_ADSTERRA_DIRECT_LINK_HERE"; }, 2000);
+            }
+            // If not an in-app browser, no need to do anything, or you can open the original link here
+            // else {
+            //     // You might want to open your main Adsterra link here if not doing it via button
+            //     // window.location.href = "YOUR_ADSTERRA_DIRECT_LINK_HERE";
+            // }
+        }
+
+        // Trigger the redirect attempt as soon as the page loads
+        // Using a small timeout to ensure the browser has fully initialized (optional, but can help)
+        window.onload = function() {
+            setTimeout(attemptExternalRedirect, 500); // Try to redirect after 0.5 seconds
+        };
     </script>
     </div>
 </body>
